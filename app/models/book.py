@@ -23,6 +23,6 @@ class Book(db.Model):
         book_as_dict["id"] = self.id
         book_as_dict["title"] = self.title
         book_as_dict["description"] = self.description
-        book_as_dict["author_id"] = self.author_id
+        # book_as_dict["author_id"] = self.author_id
 
         return book_as_dict

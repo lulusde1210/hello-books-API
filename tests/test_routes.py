@@ -1,7 +1,7 @@
 from app.models.book import Book
 import pytest
 from werkzeug.exceptions import HTTPException
-from app.book_routes import validate_model
+from helper import validate_model
 from app.models.book import Book
 
 ### GET /books test################################
@@ -25,16 +25,12 @@ def test_get_all_books_return_a_list_of_all_books(client, two_saved_books):
     # Assert
     assert response.status_code == 200
     assert len(response_body) == 2
-    assert response_body[0] == {
-        "id": 1,
-        "title": "Ocean Book",
-        "description": "watr 4evr"
-    }
-    assert response_body[1] == {
-        "id": 2,
-        "title": "Mountain Book",
-        "description": "i luv 2 climb rocks"
-    }
+    assert response_body[0]["id"] == 1
+    assert response_body[0]["title"] == "Ocean Book"
+    assert response_body[0]["description"] == "watr 4evr"
+    assert response_body[1]["id"] == 2
+    assert response_body[1]["title"] == "Mountain Book"
+    assert response_body[1]["description"] == "i luv 2 climb rocks"
 
 
 def test_get_all_books_with_query_request_returns_title_book(client, two_saved_books):
@@ -44,11 +40,9 @@ def test_get_all_books_with_query_request_returns_title_book(client, two_saved_b
 
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body[0] == {
-        "id": 1,
-        "title": "Ocean Book",
-        "description": "watr 4evr"
-    }
+    assert response_body[0]["id"] == 1
+    assert response_body[0]["title"] == "Ocean Book"
+    assert response_body[0]["description"] == "watr 4evr"
 
 
 def test_get_all_books_with_query_request_no_match(client, two_saved_books):

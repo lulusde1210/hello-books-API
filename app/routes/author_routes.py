@@ -12,9 +12,7 @@ author_bp = Blueprint("authors", __name__, url_prefix="/authors")
 @author_bp.route("", methods=["GET"])
 def get_all_authors():
     all_authors = Author.query.all()
-
     authors_response = [author.to_dict() for author in all_authors]
-
     return jsonify(authors_response)
 
 
@@ -32,24 +30,27 @@ def get_all_books_of_author(author_id):
 @author_bp.route("", methods=["POST"])
 def create_author():
     request_body = request.get_json()
+    try:
+        author = Author(name=request_body["name"])
 
-    author = Author(name=request_body["name"])
-
-    db.session.add(author)
-    db.session.commit()
-    return make_response(jsonify(f"Author {author.name} successfully created."), 201)
+        db.session.add(author)
+        db.session.commit()
+        return make_response(jsonify(f"Author {author.name} successfully created."), 201)
+    except KeyError as e:
+        abort(make_response(jsonify(f"missing required value")), 400)
 
 
 @author_bp.route("/<author_id>/books", methods=["POST"])
 def create_book_for_author(author_id):
-
     author = validate_model(Author, author_id)
+    try:
+        book_data = request.get_json()
+        book = Book.from_dict(book_data)
+        book.author = author
 
-    book_data = request.get_json()
-    book = Book.from_dict(book_data)
-    book.author = author
+        db.session.add(book)
+        db.session.commit()
+        return make_response(jsonify(f"Book {book.title} by {book.author.name} successfully created"), 201)
 
-    db.session.add(book)
-    db.session.commit()
-
-    return make_response(jsonify(f"Book {book.title} by {book.author.name} successfully created"), 201)
+    except KeyError as e:
+        abort(make_response(jsonify(f"missing required value")), 400)

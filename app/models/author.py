@@ -14,3 +14,12 @@ class Author(db.Model):
         author_as_dict["name"] = self.name
 
         return author_as_dict
+
+    @classmethod
+    def from_dict(cls, author_dict):
+        author = cls(
+            name=author_dict["title"],
+            description=author_dict["description"]
+        )
+
+        return author

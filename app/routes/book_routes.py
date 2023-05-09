@@ -9,12 +9,9 @@ books_bp = Blueprint("books", __name__, url_prefix="/books")
 @books_bp.route("", methods=["GET"])
 def get_all_books():
     title_query = request.args.get("title")
-    # author_query = request.args.get("author_id")
 
     if title_query:
         all_books = Book.query.filter_by(title=title_query)
-    # elif author_query:
-    #     all_books = Book.query.filter_by(author_id=author_query)
     else:
         all_books = Book.query.all()
 
